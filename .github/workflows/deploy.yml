@@ -1,0 +1,42 @@
+name: Deploy React App to Vercel
+
+on:
+  push:
+    branches:
+      - main # Set your default branch here, e.g., 'main' or 'master'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the repository code
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Set up Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16' # You can change this to match your Node.js version
+
+      # Install dependencies
+      - name: Install dependencies
+        run: |
+          npm install
+
+      # Build the project
+      - name: Build the project
+        run: |
+          npm run build
+
+      # Deploy to Vercel
+      - name: Deploy to Vercel
+        uses: amondnet/vercel-action@v20
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }} # Add your Vercel token as a secret in GitHub
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }} # Add your Vercel organization ID as a secret in GitHub
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }} # Add your Vercel project ID as a secret in GitHub
+          vercel-args: '--prod' # This will deploy to the production environment
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
